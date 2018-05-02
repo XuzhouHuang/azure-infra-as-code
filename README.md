@@ -22,11 +22,11 @@ AzureCloud should also work but need further test
 
 ## Jenkins (Linux)
 
-|Module          |Function                  |LINK                                                          |
-|----------------|--------------------------|--------------------------------------------------------------|
-|Azure CLI       |SPN login, ARM Template   |                                                              |
-|AzBB            |AzBB template for IaaS    |                                                              |
-|PowerShell      |logic & script control    |https://docs.microsoft.com/en-us/powershell/azure/install-azurermps-maclinux                             |
+|Module          |Function                      |LINK                                                          |
+|----------------|------------------------------|--------------------------------------------------------------|
+|Azure CLI       |SPN login, ARM Template |                                                              |
+|AzBB            |AzBB template for IaaS |                                                              |
+|PowerShell      |logic & script control |https://docs.microsoft.com/en-us/powershell/azure/install-azurermps-maclinux                             |
 |ImportExcel     |parse user input          |                                                              |
 
 
