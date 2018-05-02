@@ -7,17 +7,17 @@ AzureCloud should also work but need further test
 
 ## Workflow
 
-> Code change (Excel) commit to Github
+> a. Code change (Excel) commit to Github
 
-> Github Jenkins Webhook Plugin 
+> b. Github Jenkins Webhook Plugin 
 
-> Jenkins Workitem 
+> c. Jenkins Workitem 
 
-> PS to parse input Excel doc
+> d. PS to parse input Excel doc
 
-> Az & AzBB & ARM Template for resource provision. 
+> e. Az & AzBB & ARM Template for resource provision. 
 
-> Status Report
+> f. Status Report
 
 
 ## Jenkins (Linux)
