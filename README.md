@@ -8,7 +8,7 @@ Azure AzureCloud should also work no hard coded service end point. Need further 
 
 Workflow
 =========
-code change (Provision Request Excel) commit
+-> code change (Provision Request Excel) commit
 
   -> Github 
   
