@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterDnsName": {
+      "value": "mc-sf-linux"
+    },
+    "adminUsername": {
+      "value": "allenk"
+    },
+    "adminPassword": {
+      "value": "Password01!"
+    },
+    "certificateThumbprint": {
+      "value": "4F883F8F26299DDE014E9B86E7559FF8C6184D87"
+    },
+    "certificateUrlValue": {
+      "value": "https://mc-keyvault-lab.vault.azure.cn/secrets/mc-client-server-auth/17dbd853f2e846959f9be711358e1903"
+    },
+    "sourceVaultValue": {
+      "value": "/subscriptions/c4013028-2728-46b8-acf1-e397840c4344/resourceGroups/LabMgmt/providers/Microsoft.KeyVault/vaults/mc-keyvault-lab"
+    },
+    "pipName": {
+      "value": "pip-mc-sf-linux"
+    },
+    "vNetResourceGroup": {
+      "value": "infra-as-code"
+    },
+    "vNetName": {
+      "value": "vnet"
+    },
+    "subnetName": {
+      "value": "sf"
+    },
+    "sfLogStorageAccount": {
+      "value": "mcsflinuxlog"
+    }
+  }
+}

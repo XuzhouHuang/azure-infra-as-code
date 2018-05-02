@@ -1,0 +1,90 @@
+﻿{
+    "parameters":  {
+                       "buildingBlocks":  {
+                                              "value":  [
+                                                            {
+                                                                "settings":  [
+                                                                                 {
+                                                                                     "securityRules":  [
+                                                                                                           {
+                                                                                                               "name":  "Block_RDP_Internet",
+                                                                                                               "sourceAddressPrefix":  "Internet",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "*",
+                                                                                                               "destinationPortRange":  3389,
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  200,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Block_SSH_Internet",
+                                                                                                               "sourceAddressPrefix":  "Internet",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "*",
+                                                                                                               "destinationPortRange":  22,
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  210,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Block_Internet_Outbound",
+                                                                                                               "sourceAddressPrefix":  "*",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "*",
+                                                                                                               "destinationAddressPrefix":  "Internet",
+                                                                                                               "destinationPortRange":  "*",
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  200,
+                                                                                                               "direction":  "Outbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Allow_HTTPS_Internet",
+                                                                                                               "sourceAddressPrefix":  "Internet",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "*",
+                                                                                                               "destinationPortRange":  443,
+                                                                                                               "access":  "Allow",
+                                                                                                               "priority":  100,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Allow_HTTP_Internet",
+                                                                                                               "sourceAddressPrefix":  "Internet",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "*",
+                                                                                                               "destinationPortRange":  80,
+                                                                                                               "access":  "Allow",
+                                                                                                               "priority":  110,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           }
+                                                                                                       ],
+                                                                                     "name":  "mc-nsg-iac-web",
+                                                                                     "virtualNetworks":  [
+                                                                                                             {
+                                                                                                                 "resourceGroupName":  "mc-rg-iac-basic",
+                                                                                                                 "name":  "mc-vnet-iac-dev",
+                                                                                                                 "subnets":  [
+                                                                                                                                 "web"
+                                                                                                                             ]
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "resourceGroupName":  "mc-rg-iac-basic",
+                                                                                                                 "name":  "mc-vnet-iac-uat",
+                                                                                                                 "subnets":  [
+                                                                                                                                 "web"
+                                                                                                                             ]
+                                                                                                             }
+                                                                                                         ]
+                                                                                 }
+                                                                             ],
+                                                                "type":  "NetworkSecurityGroup"
+                                                            }
+                                                        ]
+                                          }
+                   },
+    "contentVersion":  "1.0.0.0"
+}

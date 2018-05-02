@@ -1,0 +1,63 @@
+﻿{
+    "parameters":  {
+                       "buildingBlocks":  {
+                                              "value":  [
+                                                            {
+                                                                "settings":  [
+                                                                                 {
+                                                                                     "subnets":  [
+                                                                                                     {
+                                                                                                         "name":  "firewall",
+                                                                                                         "addressPrefix":  "10.1.1.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "web",
+                                                                                                         "addressPrefix":  "10.1.2.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "app",
+                                                                                                         "addressPrefix":  "10.1.3.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "sqldb",
+                                                                                                         "addressPrefix":  "10.1.4.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "mysqldb",
+                                                                                                         "addressPrefix":  "10.1.5.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "redis",
+                                                                                                         "addressPrefix":  "10.1.6.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "appgw",
+                                                                                                         "addressPrefix":  "10.1.7.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "sf",
+                                                                                                         "addressPrefix":  "10.1.8.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "mgmt",
+                                                                                                         "addressPrefix":  "10.1.100.0/24"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "name":  "GatewaySubnet",
+                                                                                                         "addressPrefix":  "10.1.200.0/24"
+                                                                                                     }
+                                                                                                 ],
+                                                                                     "name":  "mc-vnet-iac-uat",
+                                                                                     "addressPrefixes":  [
+                                                                                                             "10.1.0.0/16",
+                                                                                                             "10.2.0.0/16"
+                                                                                                         ]
+                                                                                 }
+                                                                             ],
+                                                                "type":  "VirtualNetwork"
+                                                            }
+                                                        ]
+                                          }
+                   },
+    "contentVersion":  "1.0.0.0"
+}

@@ -1,0 +1,2 @@
+﻿az group deployment create -g mc-rg-iac-vm --template-file C:\kangxh\Infra-as-code\deployment\201804280801\VMTemplate.json --parameters  @C:\kangxh\Infra-as-code\deployment\201804280801\vm-mc-vm-iacweb-Param.json
+az group deployment create -g mc-rg-iac-vm --template-file C:\kangxh\Infra-as-code\deployment\201804280801\VMTemplate.json --parameters  @C:\kangxh\Infra-as-code\deployment\201804280801\vm-mc-vm-iacapp-Param.json

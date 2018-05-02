@@ -1,0 +1,42 @@
+﻿{
+    "parameters":  {
+                       "buildingBlocks":  {
+                                              "value":  [
+                                                            {
+                                                                "settings":  [
+                                                                                 {
+                                                                                     "name":  "mc-udr-iac-dev",
+                                                                                     "routes":  [
+                                                                                                    {
+                                                                                                        "name":  "mc-udr-dev-to-uat",
+                                                                                                        "addressPrefix":  "10.1.0.0/16",
+                                                                                                        "nextHop":  "10.0.100.100",
+                                                                                                        "nextHopIP":  "10.0.100.100"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name":  "mc-udr-dev-to-prod",
+                                                                                                        "addressPrefix":  "10.3.0.0/16",
+                                                                                                        "nextHop":  "10.0.100.100",
+                                                                                                        "nextHopIP":  "10.0.100.100"
+                                                                                                    }
+                                                                                                ],
+                                                                                     "virtualNetworks":  [
+                                                                                                             {
+                                                                                                                 "resourceGroupName":  "mc-rg-iac-basic",
+                                                                                                                 "name":  "mc-vnet-iac-dev",
+                                                                                                                 "subnets":  [
+                                                                                                                                 "web",
+                                                                                                                                 "app",
+                                                                                                                                 "sqldb"
+                                                                                                                             ]
+                                                                                                             }
+                                                                                                         ]
+                                                                                 }
+                                                                             ],
+                                                                "type":  "RouteTable"
+                                                            }
+                                                        ]
+                                          }
+                   },
+    "contentVersion":  "1.0.0.0"
+}

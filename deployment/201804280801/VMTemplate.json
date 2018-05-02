@@ -1,0 +1,228 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name Prefix of the VMs. Numbers will be appended after this name"
+      }
+    },
+    "numberOfInstances": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "Number of VM instances to create, default is 2"
+      }
+    },
+    "availabilitySetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Availability Set name for the VMs, it is a full name, not prefix"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin user name for the Virtual Machines"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the Virtual Machines"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A1",
+      "metadata": {
+        "description": "VM Size"
+      }
+    },
+    "imageUri": {
+      "type": "string",
+      "defaultValue": "https://allenklab.blob.core.windows.net/vhds/CentOSAzureImg.vhd",
+      "metadata": {
+        "description": "vhd as image to create this VM group"
+      }
+    },
+    "vmDiagnosticStor": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the Virtual Machines"
+      }
+    },
+    "vNetRG": {
+      "type": "string",
+      "metadata": {
+        "description": "resource group name which contains the vnet"
+      }
+    },
+    "vNetName": {
+      "type": "string",
+      "metadata": {
+        "description": "existing virtual network. This vnet must has been created already. we will not create vNet in this template"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "existing subnet name in this VNet. this vNet subnet but has been created already"
+      }
+    },
+    "vmIPScope": {
+      "type": "string",
+      "metadata": {
+        "description": "the started IP address of the vm Group. format like 10.0.0.100. "
+      }
+    }
+  },
+  "variables": {
+    "apiVersion": "2016-01-01",
+
+    "vnetID": "[resourceId(parameters('vNetRG'), 'Microsoft.Network/virtualNetworks/', parameters('vNetName'))]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
+
+    "vmName": "[parameters('vmName')]",
+    "osType": "Linux",
+    "imageName": "[concat(parameters('vmName'),'-image')]",
+
+    "vmDataDiskSizeInGB": 32,
+    "vmStorageAccountContainerName": "vhds",
+    "vmDiagnosticStorSKU": "Standard_LRS",
+
+    "nicName": "NIC01-",
+    "ipConfigName": "IPconfig"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Compute/images",
+      "apiVersion": "2016-04-30-preview",
+      "name": "[variables('imageName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "storageProfile": {
+          "osDisk": {
+            "osType": "[variables('osType')]",
+            "osState": "Generalized",
+            "blobUri": "[parameters('imageUri')]",
+            "storageAccountType": "Standard_LRS"
+          }
+        }
+      }
+    },
+    {
+      "name": "[parameters('vmDiagnosticStor')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2017-10-01",
+      "sku": {
+        "name": "[variables('vmDiagnosticStorSKU')]"
+      },
+      "kind": "Storage",
+      "location": "[resourceGroup().location]",
+      "tags": {
+      }
+    },
+    {
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[parameters('availabilitySetName')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "managed": true,
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 5
+      },
+      "tags": {
+      }
+    },
+    {
+      "apiVersion": "2017-03-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex(),2,'0'))]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[variables('ipConfigName')]",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[concat(substring(parameters('vmIPScope'), 0, lastIndexOf(parameters('vmIPScope'), '.')), '.', add(int(last(split(parameters('vmIPScope'),'.'))), copyIndex()) )]",
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              }
+            }
+          }
+        ]
+      },
+      "tags": {
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'))]",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex(),2,'0')))]",
+        "[concat('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]",
+        "[concat('Microsoft.Compute/images/', variables('imageName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('vmDiagnosticStor'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'),'-OS-Disk')]",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'),'-Data-Disk')]",
+              "lun": 0,
+              "diskSizeGB": "[variables('vmDataDiskSizeInGB')]",
+              "caching": "ReadOnly",
+              "createOption": "Empty"
+            }
+          ],
+          "imageReference": {
+            "id": "[resourceId('Microsoft.Compute/images/', variables('imageName'))]"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(copyIndex(),2,'0')))]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', parameters('vmDiagnosticStor'), '.blob.core.chinacloudapi.cn')]"
+          }
+        }
+      }
+    }
+  ]
+}

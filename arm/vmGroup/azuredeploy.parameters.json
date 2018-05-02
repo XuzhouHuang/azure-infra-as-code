@@ -1,0 +1,36 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "value": "VMGroupPoC"
+    },
+    "adminUsername": {
+      "value": "allenk"
+    },
+    "adminPassword": {
+      "value": "PassW0rd01!"
+    },
+    "numberOfInstances": {
+      "value": 2
+    },
+    "availabilitySetName": {
+      "value": "TestAvset"
+    },
+    "vmDiagnosticStor": {
+      "value": "ortpocdiagnostic"
+    },
+    "vNetRG": {
+      "value": "infra-as-code"
+    },
+    "vNetName": {
+      "value": "vnet1"
+    },
+    "subnetName": {
+      "value": "web"
+    },
+    "vmIPScope": {
+      "value": "10.0.0.10"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+﻿{
+    "parameters":  {
+                       "buildingBlocks":  {
+                                              "value":  [
+                                                            {
+                                                                "settings":  [
+                                                                                 {
+                                                                                     "securityRules":  [
+                                                                                                           {
+                                                                                                               "name":  "Allow_DB_Port",
+                                                                                                               "sourceAddressPrefix":  "VirtualNetwork",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "VirtualNetwork",
+                                                                                                               "destinationPortRange":  1433,
+                                                                                                               "access":  "Allow",
+                                                                                                               "priority":  100,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Block_Web_Subnet",
+                                                                                                               "sourceAddressPrefix":  "10.0.2.0/24",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "VirtualNetwork",
+                                                                                                               "destinationPortRange":  "*",
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  200,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Block_APP_Subnet",
+                                                                                                               "sourceAddressPrefix":  "10.0.3.0/24",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "TCP",
+                                                                                                               "destinationAddressPrefix":  "VirtualNetwork",
+                                                                                                               "destinationPortRange":  "*",
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  210,
+                                                                                                               "direction":  "Inbound"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Block_Internet_Outbound",
+                                                                                                               "sourceAddressPrefix":  "*",
+                                                                                                               "sourcePortRange":  "*",
+                                                                                                               "protocol":  "*",
+                                                                                                               "destinationAddressPrefix":  "Internet",
+                                                                                                               "destinationPortRange":  "*",
+                                                                                                               "access":  "Deny",
+                                                                                                               "priority":  200,
+                                                                                                               "direction":  "Outbound"
+                                                                                                           }
+                                                                                                       ],
+                                                                                     "name":  "mc-nsg-iac-db",
+                                                                                     "virtualNetworks":  [
+                                                                                                             {
+                                                                                                                 "resourceGroupName":  "mc-rg-iac-basic",
+                                                                                                                 "name":  "mc-vnet-iac-dev",
+                                                                                                                 "subnets":  [
+                                                                                                                                 "sqldb",
+                                                                                                                                 "mysqldb"
+                                                                                                                             ]
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "resourceGroupName":  "mc-rg-iac-basic",
+                                                                                                                 "name":  "mc-vnet-iac-uat",
+                                                                                                                 "subnets":  [
+                                                                                                                                 "sqldb",
+                                                                                                                                 "mysqldb"
+                                                                                                                             ]
+                                                                                                             }
+                                                                                                         ]
+                                                                                 }
+                                                                             ],
+                                                                "type":  "NetworkSecurityGroup"
+                                                            }
+                                                        ]
+                                          }
+                   },
+    "contentVersion":  "1.0.0.0"
+}

@@ -1,0 +1,26 @@
+﻿{
+    "parameters":  {
+                       "buildingBlocks":  {
+                                              "value":  [
+                                                            {
+                                                                "settings":  [
+                                                                                 {
+                                                                                     "subnets":  [
+                                                                                                     {
+                                                                                                         "name":  "firewall",
+                                                                                                         "addressPrefix":  "10.3.1.0/24"
+                                                                                                     }
+                                                                                                 ],
+                                                                                     "name":  "mc-vnet-iac-prod",
+                                                                                     "addressPrefixes":  [
+                                                                                                             "10.3.0.0/16"
+                                                                                                         ]
+                                                                                 }
+                                                                             ],
+                                                                "type":  "VirtualNetwork"
+                                                            }
+                                                        ]
+                                          }
+                   },
+    "contentVersion":  "1.0.0.0"
+}
