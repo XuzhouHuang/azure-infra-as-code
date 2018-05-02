@@ -1,64 +1,29 @@
 # azure-infra-as-code
 
-
-
-The project to manager Azure Infra using ARM template, AzBB, Az and PowerShell. 
-
-
+The project is to manage Azure infrastructure using ARM Template, Azure Building Block, Azure CLI and PowerShell.
 Target cloud is AzureChinaCloud and tested. 
-
-Azure AzureCloud should also work but need test
-
+AzureCloud should also work but need further test
 
 
-Workflow
+## Workflow
 
-=========
+> Code change (Excel) commit to Github
+	> Github Jenkins Webhook Plugin 
+       > Jenkins Workitem 
+		  > PS to parse input Excel doc
+			> Az & AzBB & ARM Template for resource provision. 
+				> Status Report
 
--> code change (Provision Request Excel) commit to Github 
-  
-    
-	-> Github Jenkins Webhook Plugin 
-    
-      
-		-> Jenkins Workitem 
-      
-        
-			-> PS to parse input Excel doc
-        
-          
-				-> Az & AzBB & Arm Template for resource povision. 
-          
-            
-					-> Status Report
+**offline!**
 
+## Jenkins (Linux)
 
+|Module          |Function                  |LINK                         |
+|----------------|--------------------------|-----------------------------|
+|Azure CLI       |SPN login, ARM Template   |                             |
+|AzBB            |AzBB template for IaaS    |                             |
+|PowerShell      |logic & script control    |https://docs.microsoft.com/en-us/powershell/azure/install-azurermps-maclinux                             |
+|ImportExcel     |parse user input          |                             |
 
-Jenkins (Linux)
-
-================
-
-Install Azure Cli
-
-Install Azure Building Block
-
-Install PowerShell for Linux
-
-Import Azure PowerShell module for Linux: https://docs.microsoft.com/en-us/powershell/azure/install-azurermps-maclinux
-
-Import ImportExcel Module
-
-
-
-As running the provsion task using SPN, configure Azure SPN login for subscription. 
-https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli.
-
-Test Jenkins to ensure it works with Az spn logon.
- 
-
-Jenkins (Windows)
-
-================
-
-Similar setup works for Windows server
-
+## Jenkins (Windows)
+Similar as Jenkins on Linux. 
