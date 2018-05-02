@@ -8,9 +8,7 @@ Azure AzureCloud should also work no hard coded service end point. Need further 
 
 Workflow
 =========
--> code change (Provision Request Excel) commit
-
-  -> Github 
+code change (Provision Request Excel) commit to Github 
   
     -> Github Jenkins Webhook Plugin 
     
