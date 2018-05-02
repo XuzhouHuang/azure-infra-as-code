@@ -1,7 +1,8 @@
 # azure-infra-as-code
-# the project to manager Azure Infra using ARM template, AzBB, Az and PowerShell. 
-# Target cloud is AzureChinaCloud and tested. 
-# Azure AzureCloud should also work no hard coded service end point. Need further test.
+
+The project to manager Azure Infra using ARM template, AzBB, Az and PowerShell. 
+Target cloud is AzureChinaCloud and tested. 
+Azure AzureCloud should also work no hard coded service end point. Need further test.
 
 Workflow
 =========
