@@ -1,17 +1,25 @@
 # azure-infra-as-code
 
 The project to manager Azure Infra using ARM template, AzBB, Az and PowerShell. 
+
 Target cloud is AzureChinaCloud and tested. 
+
 Azure AzureCloud should also work no hard coded service end point. Need further test.
 
 Workflow
 =========
 code change (Provision Request Excel) commit
+
   -> Github 
+  
     -> Github Jenkins Webhook Plugin 
+    
       -> Jenkins Workitem 
+      
         -> PS to parse input Excel doc
+        
           -> Az & AzBB & Arm Template for resource povision. 
+          
             -> Status Report
 
 Jenkins (Linux)
