@@ -34,3 +34,7 @@ AzureCloud should also work but need further test
 
 ## Jenkins (Windows)
 Similar as Jenkins on Linux. 
+
+
+## Jenkins Trigger
+when commit change, use DEPLOY as commit description, Jenkins workflow will tigger resource provision with this keyword
