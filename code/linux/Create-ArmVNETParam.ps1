@@ -1,17 +1,9 @@
-﻿cd C:\kangxh\Infra-as-code\deployment\201804280801
-
 Import-Module ".\Module.psm1"
 
 $deployPath = Convert-Path .
-$excelSheet = $deployPath + "\AzureEnv.xlsx"
+$excelSheet = $deployPath + "/AzureEnv.xlsx"
 $vnetSheet = Import-Excel -Path $excelSheet -WorksheetName vNet -DataOnly 
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
-
-if ([System.Environment]::OSversion.Platform -match "Win") {
-    $subscriptionId = $environmentSheet[0].SubscriptionID
-} else {
-    $subscriptionId = $environmentSheet[1].SubscriptionID
-}
 
 #build vNet array
 $vnetArray = @()
@@ -40,8 +32,10 @@ for ($i=0; $i -le $vnetSheet.Count; $i++)
         $subnets[$vnetSheet[$i].C] += @($subnet)
     }
 }
-$subnets | ConvertTo-Json -Depth 10
+
 # Now, create the building block structure. for every vnet, we will create one Azbb Param file to make it flexible. 
+
+"##### command to create azure network" | Out-File -Encoding utf8 "$deployPath/az-vnet-create-cmd.bat"
 foreach ($vnet in $vnetArray){
     # 1. build Settings block for AZBB
     $settingsBLOCK = @()
@@ -64,10 +58,10 @@ foreach ($vnet in $vnetArray){
     #Now, export the generated Parameter files and generate the az command
 
     $azbbParamFileName = "arm-vnet-" + $vnet.name + "-Param.json"
-    $azbbParam | Out-File -Encoding utf8 "$deployPath\$azbbParamFileName"
+    $azbbParam | Out-File -Encoding utf8 "$deployPath/$azbbParamFileName"
 
-    $azCommand = "azbb -c AzureChinaCloud -s " + $subscriptionId + " -l " + $vnet.location + " -g " + $vnet.resourceGroupName  + " -p $deployPath\$azbbParamFileName --deploy"
-    $azCommand | Out-File -Encoding utf8 -Append "$deployPath\az-vnet-create-cmd.bat"
+    $azCommand = "azbb -c AzureChinaCloud -s " + $subscriptionId + " -l " + $vnet.location + " -g " + $vnet.resourceGroupName  + " -p $deployPath/$azbbParamFileName --deploy"
+    $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-vnet-create-cmd.bat"
 }
 
 ###################################################################################
