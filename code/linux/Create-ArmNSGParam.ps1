@@ -1,4 +1,4 @@
-Import-Module ".\Module.psm1"
+Import-Module "./Module.psm1"
 
 # Service Fabric is not available in AzBB. We use use our own ARM Template to Generate a Parameter Json. 
 $deployPath = Convert-Path .
