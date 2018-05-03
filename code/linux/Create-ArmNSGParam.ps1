@@ -56,7 +56,7 @@ for ($i=0; $i -le $nsgSheet.Count; $i++)
 }
 
 # output data to param file and build the command line
-"##### azure command to create NSGs" | Out-File -Encoding utf8 -Append "$deployPath/az-nsg-create-cmd.bat"
+"##### azure command to create NSGs" | Out-File -Encoding utf8 "$deployPath/az-nsg-create-cmd.bat"
 foreach ($nsg in $nsgArray)
 {
 
