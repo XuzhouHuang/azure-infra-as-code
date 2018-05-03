@@ -1,4 +1,4 @@
-Import-Module ".\Module.psm1"
+Import-Module "./Module.psm1"
 
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
