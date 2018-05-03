@@ -1,14 +1,10 @@
-﻿Import-Module "C:\kangxh\powershell\allenk-Module-Json.psm1"
-
-cd "C:\kangxh\Infra-as-code\deployment\201804251425"
+Import-Module ".\Module.psm1"
 
 $deployPath = Convert-Path .
-$codePath = "C:\kangxh\Infra-as-code\code\"
-$excelSheet = $deployPath + "\poc-daimler.xlsx"
-$sfARMTemplate = "C:\kangxh\Projects\MoonCake\Customers\Daimler\ROSS2018031201573673\DaimlerARM\ServiceFabric\azuredeploy.json"
+$excelSheet = $deployPath + "/AzureEnv.xlsx"
+$sfARMTemplate = "../../arm/ServiceFabric/SF-1Nodetype-Linux.json"
 
 # Service Fabric is not available in AzBB. We use use our own ARM Template to Generate a Parameter Json. 
-cd C:\kangxh\Infra-as-code
 $sfSheet = Import-Excel -Path $excelSheet -WorksheetName ServiceFabric
 
 # read input parameter
@@ -62,7 +58,7 @@ $parameterFile = @{
 $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
 $parameterFile = $parameterFile.Replace("null", "")
 
-$parameterFile | Out-File -Encoding utf8 "$deployPath\sf-$clusterDnsName-param.json"
-
-"az group deployment create -g " + $RG + " --template-file " + $sfARMTemplate + "--parameters @$deployPath\sf-$clusterDnsName-param.json" | Out-File -Encoding utf8 -Append "$deployPath\az-sf-create-cmd.bat"
+$parameterFile | Out-File -Encoding utf8 "$deployPath/sf-$clusterDnsName-param.json"
+"### azure service fabric provision command" | Out-File -Encoding utf8 -Append "$deployPath/az-sf-create-cmd.bat"
+"az group deployment create -g " + $RG + " --template-file " + $sfARMTemplate + "--parameters @$deployPath/sf-$clusterDnsName-param.json" | Out-File -Encoding utf8 -Append "$deployPath/az-sf-create-cmd.bat"
 
