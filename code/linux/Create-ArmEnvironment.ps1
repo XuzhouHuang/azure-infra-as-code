@@ -6,7 +6,7 @@
  param (
     [Parameter()][string] $DeployID = "209912310000", # a test folder which will not conflict with current date
     [Parameter()][string] $DeployFolder = "/var/lib/jenkins/workspace/az-infra-as-code/deployment",
-    [Parameter()][string] $PSModule = "/usr/local/share/powershell/Modules/ImportExcel/4.0.12/allenk-Module-Json.psm1",
+    [Parameter()][string] $PSModule = "/usr/local/share/powershell/Modules/ImportExcel/4.0.12/ImportExcel.psm1",
     [Parameter()][string] $AzureFile = "/var/lib/jenkins/workspace/az-infra-as-code/AzureEnv.xlsx"
  )
 
