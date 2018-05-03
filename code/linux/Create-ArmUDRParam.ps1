@@ -55,7 +55,7 @@ for ($i=0; $i -le $udrSheet.Count; $i++)
 }
 
 # output data to param file and build the command line
-"##### azure command to create UDR" | Out-File -Encoding utf8 -Append "$deployPath/az-udr-create-cmd.bat"
+"##### azure command to create UDR" | Out-File -Encoding utf8 "$deployPath/az-udr-create-cmd.bat"
 foreach ($udr in $udrArray)
 {
     # 1. build Settings block for AZBB
