@@ -1,9 +1,9 @@
-﻿Import-Module ".\Module.psm1"
+Import-Module ".\Module.psm1"
 
 # Service Fabric is not available in AzBB. We use use our own ARM Template to Generate a Parameter Json. 
 $deployPath = Convert-Path .
 
-$excelSheet = $deployPath + "\AzureEnv.xlsx"
+$excelSheet = $deployPath + "/AzureEnv.xlsx"
 $rgSheet = Import-Excel -Path $excelSheet -WorksheetName RG -DataOnly 
 
 for ($i = 0; $i -lt $rgSheet.Count; $i++) 
@@ -12,6 +12,6 @@ for ($i = 0; $i -lt $rgSheet.Count; $i++)
     $Location = $rgSheet[$i].Location
     
     $azStr = "az group create --name " + $RGName + " --location " + $Location
-    $azStr | Out-File -Encoding utf8 -Append $deployPath\az-rg-create-cmd.bat
+    $azStr | Out-File -Encoding utf8 -Append $deployPath/az-rg-create-cmd.bat
 }
 
