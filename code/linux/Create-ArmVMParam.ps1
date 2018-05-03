@@ -6,12 +6,6 @@ $excelSheet = $deployPath + "/AzureEnv.xlsx"
 $vmSheet = Import-Excel -Path $excelSheet -WorksheetName VM -DataOnly
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 
-if ([System.Environment]::OSversion.Platform -match "Win") {
-    $subscriptionId = $environmentSheet[0].SubscriptionID
-} else {
-    $subscriptionId = $environmentSheet[1].SubscriptionID
-}
-
 #copy update tempalte from template forlder to current folder.
 $vmARMTemplate = "../../arm/vmGroup/VMTemplate.json"
 Copy-Item -Path $vmARMTemplate -Destination "./VMTemplate.json"
