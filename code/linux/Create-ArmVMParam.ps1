@@ -1,10 +1,8 @@
-cd C:\kangxh\Infra-as-code\deployment\201804280801
-
-Import-Module ".\Module.psm1"
+Import-Module "./Module.psm1"
 
 # VM object is supported in AzBB. but consider a customer special request for disk/vm name, using a customized template
 $deployPath = Convert-Path .
-$excelSheet = $deployPath + "\AzureEnv.xlsx"
+$excelSheet = $deployPath + "/AzureEnv.xlsx"
 $vmSheet = Import-Excel -Path $excelSheet -WorksheetName VM -DataOnly
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 
@@ -15,11 +13,12 @@ if ([System.Environment]::OSversion.Platform -match "Win") {
 }
 
 #copy update tempalte from template forlder to current folder.
-$vmARMTemplate = "..\..\arm\vmGroup\VMTemplate.json"
-Copy-Item -Path $vmARMTemplate -Destination ".\VMTemplate.json"
-$vmARMTemplate = "$deployPath\VMTemplate.json"
+$vmARMTemplate = "../../arm/vmGroup/VMTemplate.json"
+Copy-Item -Path $vmARMTemplate -Destination "./VMTemplate.json"
+$vmARMTemplate = "$deployPath/VMTemplate.json"
 
 # clearn up empty line and empty column
+"#### azure vm provision command"| Out-File -Encoding utf8 -Append "$deployPath\az-vm-create-cmd.bat"
 for ($i = 0; $i -lt $vmSheet.Count; $i++) 
 {
     $vmJson = ConvertTo-Json -InputObject $vmSheet[$i]
@@ -83,10 +82,10 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
         }
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile = $parameterFile.Replace("null", "")
-    $parameterFile | Out-File -Encoding utf8 "$deployPath\$vmParamFileName"
+    $parameterFile | Out-File -Encoding utf8 "$deployPath/$vmParamFileName"
     
-    $azCommand = "az group deployment create -g " + $RGName + " --template-file $vmARMTemplate --parameters " + " @$deployPath\$vmParamFileName"
-    $azCommand | Out-File -Encoding utf8 -Append "$deployPath\az-vm-create-cmd.bat"
+    $azCommand = "az group deployment create -g " + $RGName + " --template-file $vmARMTemplate --parameters " + " @$deployPath/$vmParamFileName"
+    $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-vm-create-cmd.bat"
 }
 
 ###########################################
