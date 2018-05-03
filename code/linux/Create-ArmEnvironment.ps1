@@ -25,7 +25,7 @@ $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -D
 $batchFile = "./az-env-create-cmd.bat"
 
 cd "$DeployFolder/$DeployID"
-"az cloud list --output table" | Out-File -Encoding utf8 -Append $batchFile
+"az cloud list --output table" | Out-File -Encoding utf8 $batchFile
 "az cloud set -n " + $environmentSheet[1].Cloud | Out-File -Encoding utf8 -Append $batchFile
 "az login --service-principal -u " + $environmentSheet[1].ApplicationID + " -p " + $environmentSheet[1].Certification + " --tenant " + $environmentSheet[1].TenantID  | Out-File -Encoding utf8 -Append $batchFile
 "az account list --output table" | Out-File -Encoding utf8 -Append $batchFile
