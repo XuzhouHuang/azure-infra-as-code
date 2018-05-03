@@ -12,7 +12,7 @@ Copy-Item -Path $vmARMTemplate -Destination "./VMTemplate.json"
 $vmARMTemplate = "$deployPath/VMTemplate.json"
 
 # clearn up empty line and empty column
-"#### azure vm provision command"| Out-File -Encoding utf8 -Append "$deployPath\az-vm-create-cmd.bat"
+"#### azure vm provision command"| Out-File -Encoding utf8 "$deployPath\az-vm-create-cmd.bat"
 for ($i = 0; $i -lt $vmSheet.Count; $i++) 
 {
     $vmJson = ConvertTo-Json -InputObject $vmSheet[$i]
