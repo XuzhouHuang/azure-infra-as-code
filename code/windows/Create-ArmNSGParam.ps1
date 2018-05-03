@@ -6,13 +6,9 @@ Import-Module ".\Module.psm1"
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "\AzureEnv.xlsx"
 $nsgSheet = Import-Excel -Path $excelSheet -WorksheetName NSG -DataOnly 
-$environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 
-if ([System.Environment]::OSversion.Platform -match "Win") {
-    $subscriptionId = $environmentSheet[0].SubscriptionID
-} else {
-    $subscriptionId = $environmentSheet[1].SubscriptionID
-}
+$environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
 # build NSG Array
 $nsgArray = @()
