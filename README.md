@@ -26,11 +26,14 @@ AzureCloud should also work but need further test
 |DEMO            |Build the deployment batch file without deploy |                                                              |
 
 ## Jenkins (Linux)
-Azure CLI -- SPN login, ARM Template
-AzBB --- AzBB template to IaaS component, including vNet, NSG, UDR
-PowerShell --- logic & script control. 
-Azure module for PowerShell on linux
-ImportExcel --- parse user input
+
+|Component      |Function |
+|----------------|-----------------------------------------------|
+|Azure CLI       |Azure CLI -- SPN login, ARM Template for VM, DB   |                                                              |
+|AzBB            |AzBB template to IaaS component, including vNet, NSG, UDR |
+|PowerShell|logic & script control|
+|Azure PowerShell| Azure PowerShell module for linux|
+|ImportExcel | parse user input|
 
 ## Jenkins (Windows)
 Similar as Jenkins on Linux. 
