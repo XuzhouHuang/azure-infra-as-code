@@ -4,7 +4,9 @@ Import-Module "./Module.psm1"
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
 $nsgSheet = Import-Excel -Path $excelSheet -WorksheetName NSG -DataOnly 
+
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
 # build NSG Array
 $nsgArray = @()
