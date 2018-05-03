@@ -2,7 +2,7 @@ Import-Module "./Module.psm1"
 
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
-$sfARMTemplate = "../../arm/ServiceFabric/SF-1Nodetype-Linux.json"
+$sfARMTemplate = "../../arm/ServiceFabric/SF-1NT-Linux.json"
 
 # Service Fabric is not available in AzBB. We use use our own ARM Template to Generate a Parameter Json. 
 $sfSheet = Import-Excel -Path $excelSheet -WorksheetName ServiceFabric
