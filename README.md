@@ -29,11 +29,12 @@ AzureCloud should also work but need further test
 
 |Component      |Function |
 |----------------|-----------------------------------------------|
-|Azure CLI       |Azure CLI -- SPN login, ARM Template for VM, DB   |                                                              |
-|AzBB            |AzBB template to IaaS component, including vNet, NSG, UDR |
-|PowerShell|logic & script control|
-|Azure PowerShell| Azure PowerShell module for linux|
-|ImportExcel | parse user input|
+|azure cli       |spn login, arm Template for vm, db   |                                                              |
+|azbb            |AzBB template to IaaS component, including vNet, NSG, UDR |
+|powershell|logic & script control|
+|azure powershell| azure powershell module for linux|
+|importexcel | parse user input|
+|Github plugin | plugins for Jenkins|
 
 ## Jenkins (Windows)
 Similar as Jenkins on Linux. 
