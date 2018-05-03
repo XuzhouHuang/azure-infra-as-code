@@ -4,7 +4,9 @@ Import-Module "./Module.psm1"
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "\AzureEnv.xlsx"
 $udrSheet = Import-Excel -Path $excelSheet -WorksheetName UDR -DataOnly 
+
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
 # build UDR Array
 $udrArray = @()
