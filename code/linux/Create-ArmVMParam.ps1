@@ -31,7 +31,7 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
     # in powershell, we can use HashObject direclty. but need to convert it to parameter file for Az command to use.
 
     $RGName = $VMObjectHash.ResourceGroup; $VMObjectHash.Remove('ResourceGroup')
-    $vmParamFileName = "vm-" + $VMObjectHash.vmName + "-Param.json"
+    $vmParamFileName = "arm-vm-" + $VMObjectHash.vmName + "-Param.json"
 
     $parameterFile = @{
             contentVersion = "1.0.0.0";
