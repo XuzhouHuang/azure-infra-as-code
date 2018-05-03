@@ -1,5 +1,3 @@
-﻿cd C:\kangxh\Infra-as-code\deployment\201804280801
-
 Import-Module ".\Module.psm1"
 
 # Service Fabric is not available in AzBB. We use use our own ARM Template to Generate a Parameter Json. 
@@ -7,12 +5,6 @@ $deployPath = Convert-Path .
 $excelSheet = $deployPath + "\AzureEnv.xlsx"
 $udrSheet = Import-Excel -Path $excelSheet -WorksheetName UDR -DataOnly 
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
-
-if ([System.Environment]::OSversion.Platform -match "Win") {
-    $subscriptionId = $environmentSheet[0].SubscriptionID
-} else {
-    $subscriptionId = $environmentSheet[1].SubscriptionID
-}
 
 # build UDR Array
 $udrArray = @()
@@ -63,6 +55,7 @@ for ($i=0; $i -le $udrSheet.Count; $i++)
 }
 
 # output data to param file and build the command line
+"##### azure command to create UDR" | Out-File -Encoding utf8 -Append "$deployPath/az-udr-create-cmd.bat"
 foreach ($udr in $udrArray)
 {
     # 1. build Settings block for AZBB
@@ -85,10 +78,10 @@ foreach ($udr in $udrArray)
 
     #Now, export the generated Parameter files and generate the az command
     $azbbParamFileName = "arm-udr-" + $udr.name + "-Param.json"
-    $azbbParam | Out-File -Encoding utf8 "$deployPath\$azbbParamFileName"
+    $azbbParam | Out-File -Encoding utf8 "$deployPath/$azbbParamFileName"
 
-    $azCommand = "azbb -c AzureChinaCloud -s " + $subscriptionId + " -l " + $udr.location + " -g " + $udr.resourceGroupName  + " -p $deployPath\$azbbParamFileName --deploy"
-    $azCommand | Out-File -Encoding utf8 -Append "$deployPath\az-udr-create-cmd.bat"
+    $azCommand = "azbb -c AzureChinaCloud -s " + $subscriptionId + " -l " + $udr.location + " -g " + $udr.resourceGroupName  + " -p $deployPath/$azbbParamFileName --deploy"
+    $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-udr-create-cmd.bat"
 }
 
 
