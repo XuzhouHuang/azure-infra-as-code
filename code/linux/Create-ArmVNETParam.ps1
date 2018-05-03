@@ -3,7 +3,9 @@ Import-Module "./Module.psm1"
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
 $vnetSheet = Import-Excel -Path $excelSheet -WorksheetName vNet -DataOnly 
+
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
 #build vNet array
 $vnetArray = @()
