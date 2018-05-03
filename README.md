@@ -19,18 +19,18 @@ AzureCloud should also work but need further test
 
 > f. Status Report
 
+## Trigger
+|Commit Tag      |Function |
+|----------------|-----------------------------------------------|
+|DEPLOY          |deploy the resource to default subscription    |                                                              |
+|DEMO            |Build the deployment batch file without deploy |                                                              |
 
 ## Jenkins (Linux)
-
-|Module          |Function                      |LINK                                                          |
-|----------------|------------------------------|--------------------------------------------------------------|
-|Azure CLI       |SPN login, ARM Template |                                                              |
-|AzBB            |AzBB template for IaaS |                                                              |
-|PowerShell      |logic & script control |https://docs.microsoft.com/en-us/powershell/azure/install-azurermps-maclinux                             |
-|ImportExcel     |parse user input          |                                                              |
-
-
-
+Azure CLI -- SPN login, ARM Template
+AzBB --- AzBB template to IaaS component, including vNet, NSG, UDR
+PowerShell --- logic & script control. 
+Azure module for PowerShell on linux
+ImportExcel --- parse user input
 
 ## Jenkins (Windows)
 Similar as Jenkins on Linux. 
