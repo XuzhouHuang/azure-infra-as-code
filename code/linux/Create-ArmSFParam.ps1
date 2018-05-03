@@ -59,6 +59,6 @@ $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
 $parameterFile = $parameterFile.Replace("null", "")
 
 $parameterFile | Out-File -Encoding utf8 "$deployPath/sf-$clusterDnsName-param.json"
-"### azure service fabric provision command" | Out-File -Encoding utf8 -Append "$deployPath/az-sf-create-cmd.bat"
+"### azure service fabric provision command" | Out-File -Encoding utf8 "$deployPath/az-sf-create-cmd.bat"
 "az group deployment create -g " + $RG + " --template-file " + $sfARMTemplate + "--parameters @$deployPath/sf-$clusterDnsName-param.json" | Out-File -Encoding utf8 -Append "$deployPath/az-sf-create-cmd.bat"
 
