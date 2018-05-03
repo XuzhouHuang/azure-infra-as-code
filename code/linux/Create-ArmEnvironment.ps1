@@ -14,15 +14,12 @@
 New-Item -ItemType Directory -Force -Path "$DeployFolder/$DeployID"
 cd "$DeployFolder/$DeployID"
 
-# copy PSModule and AzureFile to the deployment folder
-$moduleFile = "./"+"Module.psm1"
+# copy AzureFile to the deployment folder
 $excelSheet = "./"+"AzureEnv.xlsx"
-
-Copy-Item -Path $PSModule -Destination $moduleFile
 Copy-Item -Path $AzureFile -Destination $excelSheet
 
 # read configuration data
-Import-Module $moduleFile
+Import-Module $PSModule
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly
 
 $batchFile = "./az-env-create-cmd.bat"
