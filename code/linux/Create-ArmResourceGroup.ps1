@@ -6,6 +6,8 @@ $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
 $rgSheet = Import-Excel -Path $excelSheet -WorksheetName RG -DataOnly 
 
+"#### az command to create resource groups" | Out-File -Encoding utf8 $deployPath/az-rg-create-cmd.bat
+
 for ($i = 0; $i -lt $rgSheet.Count; $i++) 
 {
     $RGName = $rgSheet[$i].RGName
