@@ -1,0 +1,106 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "sku": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "userName": {
+            "type": "string"
+        },
+        "adminName": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "databaseName": {
+            "type": "string"
+        },
+        "charset": {
+            "type": "string"
+        },
+        "collation": {
+            "type": "string"
+        },
+        "privilegeName": {
+            "type": "string"
+        },
+        "addAzureToAccess": {
+            "type": "bool"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2015-09-01",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('sku')]"
+            },
+            "type": "Microsoft.MySql/servers",
+            "properties": {
+                "dailyBackupTimeInHour": 10,
+                "version": "[parameters('version')]",
+                "AllowAzureServices": "[parameters('addAzureToAccess')]"
+            },
+            "tags": {
+                "displayName": "[parameters('serverName')]"
+            }
+        },
+        {
+            "name": "[concat(parameters('serverName'),'/', parameters('userName'))]",
+            "type": "Microsoft.MySql/servers/users",
+            "apiVersion": "2015-09-01",
+            "properties": {
+                "Password": "[parameters('adminPassword')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.MySql/servers/', parameters('serverName'))]"
+            ],
+            "tags": {
+                "displayName": "[concat(parameters('serverName'),'_', parameters('userName'))]"
+            }
+        },
+        {
+            "name": "[concat(parameters('serverName'),'/', parameters('databaseName'))]",
+            "type": "Microsoft.MySql/servers/databases",
+            "apiVersion": "2015-09-01",
+            "properties": {
+                "Charset": "[parameters('charset')]",
+                "Collation": "[parameters('collation')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.MySql/servers/', parameters('serverName'))]"
+            ],
+            "tags": {
+                "displayName": "[concat(parameters('serverName'),'_', parameters('databaseName'))]"
+            }
+        },
+        {
+            "name": "[concat(parameters('serverName'),'/', parameters('databaseName'), '/', parameters('privilegeName'))]",
+            "type": "Microsoft.MySql/servers/databases/privileges",
+            "apiVersion": "2015-09-01",
+            "properties": {
+                "level": "ReadWrite"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.MySql/servers/', parameters('serverName'), '/users/', parameters('userName'))]",
+                "[concat('Microsoft.MySql/servers/', parameters('serverName'), '/databases/', parameters('databaseName'))]"
+            ],
+            "tags": {
+                "displayName": "[concat(parameters('serverName'),'_', parameters('databaseName'), '_', parameters('privilegeName'))]"
+            }
+        }
+    ]
+}
