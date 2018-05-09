@@ -11,6 +11,9 @@ cd $DeploymentID
 # creat resouce group
 pwsh -file $WORKSPACE/code/linux/Create-ArmResourceGroup.ps1
 
+# Create KeyVault and Secrets. resource should retrieve Password and other secret from Key Vault
+pwsh -file $WORKSPACE/code/linux/Create-ArmKVTParam.ps1 
+
 # Create virtual network
 pwsh -file $WORKSPACE/code/linux/Create-ArmVNETParam.ps1    
 
