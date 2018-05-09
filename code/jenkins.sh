@@ -2,9 +2,9 @@
 
 # switch to workspace directory and create deployment folder
 cd $WORKSPACE ; mkdir deployment; cd deployment
-DeploymentID=$(date +%Y%m%d%k%M)
+DeploymentID=$(date +%Y%m%d%H%M)
 
-# pass $(date +%Y%m%d%k%M) as DeployID to build deployment env folder
+# pass $(date +%Y%m%d%H%M) as DeployID to build deployment env folder
 pwsh -file $WORKSPACE/code/linux/Create-ArmEnvironment.ps1 -DeployID $DeploymentID
 cd $DeploymentID
 
