@@ -14,6 +14,9 @@ pwsh -file $WORKSPACE/code/linux/Create-ArmResourceGroup.ps1
 # Create KeyVault and Secrets. resource should retrieve Password and other secret from Key Vault
 pwsh -file $WORKSPACE/code/linux/Create-ArmKVParam.ps1 
 
+# Create SQL Server and SQL DB
+pwsh -file $WORKSPACE/code/linux/Create-ArmSQLParam.ps1
+
 # Create virtual network
 pwsh -file $WORKSPACE/code/linux/Create-ArmVNETParam.ps1    
 
