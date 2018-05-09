@@ -73,7 +73,7 @@ foreach ($mysqlinstance in $mysqlSheet) {
     }
 
     #create arm template file for each mySQL instance 
-    $mysqlParamFileName = "$deployPath/arm-mysql-$servername($databasename)-param.json"
+    $mysqlParamFileName = "$deployPath/arm-mysql-$servername-$databasename-Param.json"
 
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile | Out-File -Encoding utf8 $mysqlParamFileName 
