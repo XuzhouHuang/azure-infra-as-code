@@ -47,17 +47,17 @@ foreach ($mysqlinstance in $mysqlSheet) {
                     version = @{
                         value = $version.ToString()
                     }
-                    username = @{
+                    userName = @{
                         value = $username
                     }
-                    adminname = @{
+                    adminName = @{
                         value = $serverName+'%'+$username
                     }
-                    adminpassword = $adminpassword
+                    adminPassword = $adminpassword
                     privilegeName = @{
                         value = $username
                     }
-                    databasename = @{
+                    databaseName = @{
                         value = $databasename
                     }
                     charset = @{
@@ -66,7 +66,7 @@ foreach ($mysqlinstance in $mysqlSheet) {
                     collation = @{
                         value = $collation
                     }
-                    addazuretoaccess = @{
+                    addAzureToAccess = @{
                         value = $addazuretoaccess
                     }
             }
