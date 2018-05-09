@@ -27,9 +27,9 @@ foreach ($mysqlinstance in $mysqlSheet) {
     $collation = $mysqlinstance.'collation'
     $addazuretoaccess = $mysqlinstance.'Allow Azure internal Access'
 
-    $keyvaultRG = $databaseinstance.KeyVaultRG;
-    $keyvault = $databaseinstance.KeyVault;
-    $secret = $databaseinstance.Secret;
+    $keyvaultRG = $mysqlinstance.KeyVaultRG;
+    $keyvault = $mysqlinstance.KeyVault;
+    $secret = $mysqlinstance.Secret;
     $adminpassword = @{ reference = @{keyVault = @{id = "/subscriptions/$subscriptionId/resourceGroups/$keyvaultRG/providers/Microsoft.KeyVault/vaults/$keyvault"}; secretName = $secret} }
 
     $parameterFile = @{
