@@ -52,7 +52,7 @@ function New-StrongPassword {
     [OutputType('string')]
     param ()
     process {
-        $Password = ([char[]]([char]40..[char]46) + ([char[]]([char]65..[char]90)) + ([char[]]([char]97..[char]122)) + 0..9 | sort {Get-Random})[0..12]
+        $Password = ([char[]]([char]40..[char]46) + ([char[]]([char]65..[char]90)) + ([char[]]([char]97..[char]122)) + 0..9 | Sort-Object {Get-Random})[0..12]
         $Password = -join $Password  
         $Password
     }
