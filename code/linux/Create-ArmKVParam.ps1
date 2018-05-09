@@ -1,18 +1,20 @@
-import-module C:\kangxh\PowerShell\allenk-Module-Common.psm1
-import-module C:\kangxh\PowerShell\allenk-Module-Azure.psm1
-
-Add-AzureRMAccount-Allenk -myAzureEnv mooncake
+Import-Module "./Module.psm1"
 
 $deployPath = Convert-Path .
-$excelSheet = $deployPath + "\AzureEnv.xlsx"
+$excelSheet = $deployPath + "/AzureEnv.xlsx"
 $kvSheet = Import-Excel -Path $excelSheet -WorksheetName KeyVault -DataOnly 
 
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 $subscriptionId = $environmentSheet[1].SubscriptionID
 $tenantID = $environmentSheet[1].TenantID
 
-$kvARMTemplate = "C:\kangxh\VisualStudio\infra-as-code\KeyVault\keyvault.json"
-$kvSecretsARMTemplate = "C:\kangxh\VisualStudio\infra-as-code\KeyVault\keyvaultSecrets.json"
+$kvARMTemplate = "../../arm/KeyVault/KeyVault.json"
+Copy-Item -Path $kvARMTemplate -Destination "./KeyVault.json"
+$kvARMTemplate = "$deployPath/KeyVault.json"
+
+$kvSecretsARMTemplate = "../../arm/KeyVault/KeyVault.json"
+Copy-Item -Path $kvSecretsARMTemplate -Destination "./KeyVaultSecrets.json"
+$kvSecretsARMTemplate = "$deployPath/KeyVaultSecrets.json"
 
 # build KeyVault Array
 $kvArray = @()
@@ -75,7 +77,7 @@ for ($i=0; $i -le $kvSheet.Count; $i++)
     }
 }
 
-"### create Azure KeyVault command " | Out-File -Encoding utf8 "$deployPath\az-kv-create-cmd.bat"
+"### create Azure KeyVault command " | Out-File -Encoding utf8 "$deployPath/az-kv-create-cmd.bat"
 foreach ($keyvault in $kvArray){
     # build Key Vault Param file
     $kvParamFile = @{
@@ -104,9 +106,9 @@ foreach ($keyvault in $kvArray){
     $kvParamFileName = "arm-kv-" + $keyvault.name + "-Param.json"
     $kvParamFile = ConvertTo-Json -InputObject $kvParamFile -Depth 10
     $kvParamFile = $kvParamFile.Replace("null", "")
-    $kvParamFile | Out-File -Encoding utf8 "$deployPath\$kvParamFileName"
-    $azCommand = "az group deployment create -g " + $keyvault.resourceGroupName + " --template-file $kvARMTemplate --parameters " + " @$deployPath\$kvParamFileName"
-    $azCommand | Out-File -Encoding utf8 -Append "$deployPath\az-kv-create-cmd.bat"
+    $kvParamFile | Out-File -Encoding utf8 "$deployPath/$kvParamFileName"
+    $azCommand = "az group deployment create -g " + $keyvault.resourceGroupName + " --template-file $kvARMTemplate --parameters " + " @$deployPath/$kvParamFileName"
+    $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-kv-create-cmd.bat"
 
     $secretsParamFile = @{
         contentVersion = "1.0.0.0";
@@ -130,9 +132,9 @@ foreach ($keyvault in $kvArray){
         $secretsParamFileName = "arm-kv-" + $keyvault.name + "-Secrets-Param.json"
         $secretsParamFile = ConvertTo-Json -InputObject $secretsParamFile -Depth 10
         $secretsParamFile = $secretsParamFile.Replace("null", "")
-        $secretsParamFile | Out-File "$deployPath\$secretsParamFileName"
-        $azCommand = "az group deployment create -g " + $keyvault.resourceGroupName + " --template-file $kvSecretsARMTemplate --parameters " + " @$deployPath\$secretsParamFileName"
-        $azCommand | Out-File -Encoding utf8 -Append "$deployPath\az-kv-create-cmd.bat"
-        "# rm $deployPath\$secretsParamFileName -f" | Out-File -Encoding utf8 -Append "$deployPath\az-kv-create-cmd.bat"
+        $secretsParamFile | Out-File "$deployPath/$secretsParamFileName"
+        $azCommand = "az group deployment create -g " + $keyvault.resourceGroupName + " --template-file $kvSecretsARMTemplate --parameters " + " @$deployPath/$secretsParamFileName"
+        $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-kv-create-cmd.bat"
+        "# rm $deployPath/$secretsParamFileName -f" | Out-File -Encoding utf8 -Append "$deployPath/az-kv-create-cmd.bat"
     }
 }
