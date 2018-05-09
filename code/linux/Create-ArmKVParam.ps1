@@ -12,7 +12,7 @@ $kvARMTemplate = "../../arm/KeyVault/KeyVault.json"
 Copy-Item -Path $kvARMTemplate -Destination "./KeyVault.json"
 $kvARMTemplate = "$deployPath/KeyVault.json"
 
-$kvSecretsARMTemplate = "../../arm/KeyVault/KeyVault.json"
+$kvSecretsARMTemplate = "../../arm/KeyVault/KeyVaultSecrets.json"
 Copy-Item -Path $kvSecretsARMTemplate -Destination "./KeyVaultSecrets.json"
 $kvSecretsARMTemplate = "$deployPath/KeyVaultSecrets.json"
 
