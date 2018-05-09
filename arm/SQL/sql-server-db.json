@@ -1,0 +1,88 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "username": {
+      "type": "string"
+    },
+    "userPassword": {
+      "type": "securestring"
+    },
+    "collation": {
+      "type": "string"
+    },
+    "databasename": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "string"
+    },
+    "skuName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "Encryption": {
+      "type": "string"
+    }
+  },
+    "resources": [
+      {
+        "apiVersion": "2015-05-01-preview",
+        "location": "[parameters('location')]",
+        "name": "[parameters('serverName')]",
+        "properties": {
+          "administratorLogin": "[parameters('username')]",
+          "administratorLoginPassword": "[parameters('userPassword')]",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "apiVersion": "2017-10-01-preview",
+            "dependsOn": [
+              "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+            ],
+            "location": "[parameters('location')]",
+            "name": "[parameters('databasename')]",
+            "properties": {
+              "collation": "[parameters('collation')]"
+            },
+            "sku": {
+              "name": "[parameters('skuName')]",
+              "tier": "[parameters('tier')]"
+            },
+            "resources": [
+              {
+                "name": "current",
+                "type": "transparentDataEncryption",
+                "apiVersion": "2014-04-01",
+                "properties": {
+                  "status": "[parameters('Encryption')]"
+                },
+                "dependsOn": [ "[parameters('databasename')]" ]
+              }
+            ],
+            "type": "databases"
+          },
+          {
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+            ],
+            "location": "[parameters('location')]",
+            "name": "AllowAllWindowsAzureIps",
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            },
+            "type": "firewallrules"
+          }
+        ],
+        "type": "Microsoft.Sql/servers"
+      }
+    ]
+}
