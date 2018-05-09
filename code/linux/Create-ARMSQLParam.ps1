@@ -1,12 +1,15 @@
+Import-Module "./Module.psm1"
+
 $deployPath = Convert-Path .
+
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
+$environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 $sqlSheet = Import-Excel -Path $excelSheet -WorksheetName SQL -DataOnly
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
-$envSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly
-$subscriptionId = $envSheet[0].SubscriptionID
-
-#$sqlTemplate = "$deployPath\sql-server-db.json"
-$sqlTemplate = "C:\kangxh\VisualStudio\infra-as-code\SQL\sql-server-db.json"
+$sqlTemplate = "../../arm/SQL/sql-server-db.json"
+Copy-Item -Path $sqlTemplate -Destination "./sql-server-db.json"
+$sqlTemplate = "$deployPath/sql-server-db.json"
 
 "### create Azure SQL Resource command " | Out-File -Encoding utf8 "$deployPath/az-sql-create-cmd.bat"
 foreach ($databaseinstance in $sqlSheet) {
@@ -62,7 +65,7 @@ foreach ($databaseinstance in $sqlSheet) {
 }
 
     #create arm template file for each SQL database instance
-    $sqlParamFileName = "$deployPath\arm-sql-$databasename-Param.json"
+    $sqlParamFileName = "$deployPath/arm-sql-$databasename-Param.json"
     
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile | Out-File -Encoding utf8 $sqlParamFileName 
