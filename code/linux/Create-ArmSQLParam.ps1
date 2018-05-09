@@ -64,7 +64,7 @@ foreach ($databaseinstance in $sqlSheet) {
 }
 
     #create arm template file for each SQL database instance
-    $sqlParamFileName = "$deployPath/arm-sql-$databasename-Param.json"
+    $sqlParamFileName = "$deployPath/arm-sql-$serverName($databasename)-Param.json"
     
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile | Out-File -Encoding utf8 $sqlParamFileName 
