@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the vault"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "tenantId"
+      }
+    },
+    "vaultSku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "SKU for the vault"
+      }
+    },
+    "enabledForDeployment": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Specifies if the vault is enabled for VM or Service Fabric deployment"
+      }
+    },
+    "enabledForTemplateDeployment": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Specifies if the vault is enabled for ARM template deployment"
+      }
+    },
+    "enableVaultForVolumeEncryption": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Specifies if the vault is enabled for volume encryption"
+      }
+    },
+    "accessPolicies": {
+      "type": "array",
+      "metadata": {
+        "description": "Access Policy Hash table"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-01",
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('keyVaultName')]",
+      "properties": {
+        "tenantId": "[parameters('tenantId')]",
+        "enabledForDeployment": "[parameters('enabledForDeployment')]",
+        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+        "enabledForVolumeEncryption": "[parameters('enableVaultForVolumeEncryption')]",
+        "accessPolicies": "[parameters('accessPolicies')]",
+        "sku": {
+          "name": "[parameters('vaultSku')]",
+          "family": "A"
+        }
+      },
+      "type": "Microsoft.KeyVault/vaults"
+    }
+  ]
+}
