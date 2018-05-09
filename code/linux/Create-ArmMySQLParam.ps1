@@ -1,4 +1,4 @@
-Import-Module ImportExcel
+Import-Module "./Module.psm1"
 
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
@@ -7,8 +7,9 @@ $mysqlSheet = Import-Excel -Path $excelSheet -WorksheetName MySQL -DataOnly
 $envSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly
 $subscriptionId = $envSheet[0].SubscriptionID
 
-#$mysqlTemplate = $deployPath+"mysql-server-db.json"
-$mysqlTemplate = "C:\kangxh\VisualStudio\infra-as-code\SQL\mysql-server-db.json"
+$mysqlTemplate = "../../arm/SQL/mysql-server-db.json"
+Copy-Item -Path $mysqlTemplate -Destination "./mysql-server-db.json"
+$mysqlTemplate = "$deployPath/mysql-server-db.json"
 
 "# create Azure mySQL command" | Out-File -Encoding utf8 "$deployPath/az-mysql-create-cmd.bat"
 foreach ($mysqlinstance in $mysqlSheet) {
@@ -72,11 +73,10 @@ foreach ($mysqlinstance in $mysqlSheet) {
     }
 
     #create arm template file for each mySQL instance 
-    $mysqlParamFileName = "$deployPath\arm-mysql-$servername($databasename)-param.json"
+    $mysqlParamFileName = "$deployPath/arm-mysql-$servername($databasename)-param.json"
 
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile | Out-File -Encoding utf8 $mysqlParamFileName 
-    $parameterFile
 
     # build az command batch to create resource
     $azCommand = "az group deployment create -g " + $resourceGroupName + " --template-file $mysqlTemplate --parameters " + " @$mysqlParamFileName"
