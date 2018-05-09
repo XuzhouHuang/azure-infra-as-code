@@ -32,7 +32,6 @@ foreach ($databaseinstance in $sqlSheet) {
     $encryption = $databaseinstance.'Encryption'
     
     $userPassword = @{ reference = @{keyVault = @{id = "/subscriptions/$subscriptionId/resourceGroups/$keyvaultRG/providers/Microsoft.KeyVault/vaults/$keyvault"}; secretName = $Secret} }
-    $userPassword | ConvertTo-Json -Depth 10
     $parameterFile = @{
         contentVersion = "1.0.0.0";
         parameters = @{
