@@ -4,7 +4,9 @@ Import-Module "./Module.psm1"
 $deployPath = Convert-Path .
 $excelSheet = $deployPath + "/AzureEnv.xlsx"
 $vmSheet = Import-Excel -Path $excelSheet -WorksheetName VM -DataOnly
+
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
+$subscriptionId = $environmentSheet[1].SubscriptionID
 
 #copy update tempalte from template forlder to current folder.
 $vmARMTemplate = "../../arm/vmGroup/VMTemplate.json"
@@ -27,6 +29,12 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
     }
 
     $VMObjectHash = $vmObjectParam | ConvertTo-Hashtable 
+
+    $keyvaultRG = $VMObjectHash.keyvaultRG
+    $keyvault = $VMObjectHash.keyvault
+    $Secret = $VMObjectHash.Secret
+
+    $userPassword = @{ reference = @{keyVault = @{id = "/subscriptions/$subscriptionId/resourceGroups/$keyvaultRG/providers/Microsoft.KeyVault/vaults/$keyvault"}; secretName = $Secret} }
 
     # in powershell, we can use HashObject direclty. but need to convert it to parameter file for Az command to use.
 
@@ -66,9 +74,7 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
                 adminUsername = @{
                     value = $VMObjectHash.adminUsername
                 }
-                adminPassword = @{ 
-                    value = $VMObjectHash.adminPassword
-                }
+                adminPassword = $userPassword
                 vmDiagnosticStor = @{
                     value = $VMObjectHash.vmDiagnosticStor
                 }
