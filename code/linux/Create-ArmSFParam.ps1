@@ -18,7 +18,15 @@ $nt0InstanceCount = $sfSheet[2].C; $vmNodeType0Size = $sfSheet[2].D
 $sfLogStorageAccount = $sfSheet[3].C; $LogStorAccountSKU = $sfSheet[3].D
 $pipName = $sfSheet[4].C; $InternetAccessPort1 = $sfSheet[4].D; $InternetAccessPort2 = $sfSheet[4].E
 $vNetResourceGroup = $sfSheet[5].C; $vNetName = $sfSheet[5].D; $subnetName = $sfSheet[5].E
-$adminUsername = $sfSheet[6].C; $adminPassword = $sfSheet[6].D
+
+$adminUsername = $sfSheet[6].C
+$keyvaultRG = $sfSheet[6].D
+$keyvault = $sfSheet[6].E
+$secret = $sfSheet[6].F
+$envSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly
+$subscriptionId = $envSheet[0].SubscriptionID
+$adminpassword = @{ reference = @{keyVault = @{id = "/subscriptions/$subscriptionId/resourceGroups/$keyvaultRG/providers/Microsoft.KeyVault/vaults/$keyvault"}; secretName = $secret} }
+
 $securityLevel = $sfSheet[7].C; $sourceVaultValue = $sfSheet[7].D; $certificateUrlValue= $sfSheet[7].E; $certificateThumbprint= $sfSheet[7].F
 
 $parameterFile = @{
@@ -30,9 +38,7 @@ $parameterFile = @{
                     adminUsername = @{
                         value = $adminUsername
                     }
-                    adminPassword = @{
-                        value = $adminPassword
-                    }
+                    adminPassword = $adminPassword
                     certificateThumbprint = @{
                         value = $certificateThumbprint
                     }
