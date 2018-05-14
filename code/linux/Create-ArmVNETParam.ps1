@@ -35,6 +35,7 @@ for ($i=0; $i -le $vnetSheet.Count; $i++)
         $subnets[$vnetSheet[$i].subnets] += @($subnet)
     }
 }
+$subnets
 
 # Now, create the building block structure. for every vnet, we will create one Azbb Param file to make it flexible. 
 
