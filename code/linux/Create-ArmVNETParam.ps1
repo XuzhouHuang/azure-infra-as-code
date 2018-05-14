@@ -35,7 +35,6 @@ for ($i=0; $i -le $vnetSheet.Count; $i++)
         $subnets[$vnetSheet[$i].subnets] += @($subnet)
     }
 }
-$subnets
 
 # Now, create the building block structure. for every vnet, we will create one Azbb Param file to make it flexible. 
 
@@ -48,7 +47,7 @@ foreach ($vnet in $vnetArray){
     # 2. build values block for AZBB, as we onlyl create one type in one script. this is an array with one item
     $valueBlock = @()
     $valueBlock += @{type = "VirtualNetwork"; settings = $settingsBLOCK}
-    $valueBlock
+    $valueBlock | ConvertTo-Json -Depth 10
  
     # 3. build Building block for AZBB
     $buildingBlocks = @()
