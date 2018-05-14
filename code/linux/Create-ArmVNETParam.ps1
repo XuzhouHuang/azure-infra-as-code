@@ -43,8 +43,10 @@ $subnets
 foreach ($vnet in $vnetArray){
     # 1. build Settings block for AZBB
     $settingsBLOCK = @()
+    $subnets[$vnet.name]
     $settingsBLOCK += @{name = $vnet.name; addressPrefixes = $vnet.addressPrefixes; subnets = $subnets[$vnet.name]}
-
+    $settingsBLOCK
+    
     # 2. build values block for AZBB, as we onlyl create one type in one script. this is an array with one item
     $valueBlock = @()
     $valueBlock += @{type = "VirtualNetwork"; settings = $settingsBLOCK}
