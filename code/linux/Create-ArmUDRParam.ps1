@@ -13,7 +13,7 @@ $udrArray = @()
 for ($i=0; $i -lt $udrSheet.Count; $i++)
 {
     if ($udrSheet[$i].Properties -eq "resourceGroupName") { # find udr table header
-        $udrArray += @{resourceGroupName = $udrSheet[$i].B; location = $udrSheet[$i+1].B; name = $udrSheet[$i+2].B}
+        $udrArray += @{resourceGroupName = $udrSheet[$i].value; location = $udrSheet[$i+1].value; name = $udrSheet[$i+2].value}
     }
 }
 
@@ -21,16 +21,16 @@ for ($i=0; $i -lt $udrSheet.Count; $i++)
 $udrRules = @{}
 for ($i=0; $i -le $udrSheet.Count; $i++)
 {
-    if (($udrSheet[$i].C -eq "rules") ) { 
+    if (($udrSheet[$i].rules -eq "rules") ) { 
         Continue  # table header, do nothing
     }
-    if (($udrSheet[$i].C -ne $null) -and ($udrSheet[$i].D -ne "name") ) { # build the rule array
+    if (($udrSheet[$i].rules -ne $null) -and ($udrSheet[$i].name -ne "name") ) { # build the rule array
 
-        if ($udrRules[$udrSheet[$i].C].count -eq 0){
-            $udrRules[$udrSheet[$i].C]=@() 
+        if ($udrRules[$udrSheet[$i].rules].count -eq 0){
+            $udrRules[$udrSheet[$i].rules]=@() 
         } 
-        $udrRule = [pscustomobject]@{name = $udrSheet[$i].D; addressPrefix = $udrSheet[$i].E; nextHop = $udrSheet[$i].F; nextHopIP = $udrSheet[$i].G}
-        $udrRules[$udrSheet[$i].C] += @($udrRule)
+        $udrRule = [pscustomobject]@{name = $udrSheet[$i].name; addressPrefix = $udrSheet[$i].addressPrefix; nextHop = $udrSheet[$i].nextHop; nextHopIP = $udrSheet[$i].nextHopIP}
+        $udrRules[$udrSheet[$i].rules] += @($udrRule)
     }
 }
 
@@ -43,16 +43,16 @@ for ($i=0; $i -le $udrSheet.Count; $i++)
         Continue # table header, do nothing
     }
 
-    if (($udrSheet[$i].I -ne $null) -and ($udrSheet[$i].J -ne "resourceGroupName") ) { # build the virtual networks array
-        if ($udrVNETs[$udrSheet[$i].I].count -eq 0){
-            $udrVNETs[$udrSheet[$i].I]=@() # intialize the networks for this udr
+    if (($udrSheet[$i].virtualNetworks -ne $null) -and ($udrSheet[$i].resourceGroupName -ne "resourceGroupName") ) { # build the virtual networks array
+        if ($udrVNETs[$udrSheet[$i].virtualNetworks].count -eq 0){
+            $udrVNETs[$udrSheet[$i].virtualNetworks]=@() # intialize the networks for this udr
         } 
 
         # get the subnet list and create an array
-        [array]$subnets = $udrSheet[$i].L.Replace(" ","").Split(",")
+        [array]$subnets = $udrSheet[$i].subnets.Replace(" ","").Split(",")
 
         # Build the vNetwork array
-        $udrVNETs[$udrSheet[$i].I] += [pscustomobject]@{ resourceGroupName = $udrSheet[$i].J; name = $udrSheet[$i].K; subnets = $subnets}
+        $udrVNETs[$udrSheet[$i].virtualNetworks] += [pscustomobject]@{ resourceGroupName = $udrSheet[$i].resourceGroupName; name = $udrSheet[$i].vNetName; subnets = $subnets}
     }
 }
 
