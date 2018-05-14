@@ -21,16 +21,16 @@ for ($i=0; $i -lt $nsgSheet.Count; $i++)
 $nsgRules = @{}
 for ($i=0; $i -le $nsgSheet.Count; $i++)
 {
-    if (($nsgSheet[$i].C -eq "securityRules") ) { 
+    if (($nsgSheet[$i].securityRules -eq "securityRules") ) { 
         Continue  # table header, do nothing
     }
-    if (($nsgSheet[$i].C -ne $null) -and ($nsgSheet[$i].D -ne "name") ) { # build the rule array
+    if (($nsgSheet[$i].securityRules -ne $null) -and ($nsgSheet[$i].name -ne "name") ) { # build the rule array
 
-        if ($nsgRules[$nsgSheet[$i].C].count -eq 0){
-            $nsgRules[$nsgSheet[$i].C]=@() 
+        if ($nsgRules[$nsgSheet[$i].securityRules].count -eq 0){
+            $nsgRules[$nsgSheet[$i].securityRules]=@() 
         } 
-        $nsgRule = [pscustomobject]@{name = $nsgSheet[$i].D; sourceAddressPrefix = $nsgSheet[$i].E; sourcePortRange = $nsgSheet[$i].F; protocol = $nsgSheet[$i].G; destinationAddressPrefix = $nsgSheet[$i].H; destinationPortRange = $nsgSheet[$i].I; access = $nsgSheet[$i].J; priority = $nsgSheet[$i].K; direction = $nsgSheet[$i].L}
-        $nsgRules[$nsgSheet[$i].C] += @($nsgRule)
+        $nsgRule = [pscustomobject]@{name = $nsgSheet[$i].name; sourceAddressPrefix = $nsgSheet[$i].sourceAddressPrefix; sourcePortRange = $nsgSheet[$i].sourcePortRange; protocol = $nsgSheet[$i].protocol; destinationAddressPrefix = $nsgSheet[$i].destinationAddressPrefix; destinationPortRange = $nsgSheet[$i].destinationPortRange; access = $nsgSheet[$i].access; priority = $nsgSheet[$i].priority; direction = $nsgSheet[$i].direction}
+        $nsgRules[$nsgSheet[$i].securityRules] += @($nsgRule)
     }
 }
 
@@ -38,20 +38,20 @@ for ($i=0; $i -le $nsgSheet.Count; $i++)
 $nsgVNETs = @{}
 for ($i=0; $i -le $nsgSheet.Count; $i++)
 {
-    if ($nsgSheet[$i].M -eq "virtualNetworks") { 
+    if ($nsgSheet[$i].virtualNetworks -eq "virtualNetworks") { 
         Continue # table header, do nothing
     }
 
-    if (($nsgSheet[$i].M -ne $null) -and ($nsgSheet[$i].N -ne "resourceGroupName") ) { # build the virtual networks array
-        if ($nsgVNETs[$nsgSheet[$i].M].count -eq 0){
-            $nsgVNETs[$nsgSheet[$i].M]=@() # intialize the networks for this nsg
+    if (($nsgSheet[$i].virtualNetworks -ne $null) -and ($nsgSheet[$i].resourceGroupName -ne "resourceGroupName") ) { # build the virtual networks array
+        if ($nsgVNETs[$nsgSheet[$i].virtualNetworks].count -eq 0){
+            $nsgVNETs[$nsgSheet[$i].virtualNetworks]=@() # intialize the networks for this nsg
         } 
 
         # get the subnet list and create an array
-        [array]$subnets = $nsgSheet[$i].P.Replace(" ","").Split(",")
+        [array]$subnets = $nsgSheet[$i].subnets.Replace(" ","").Split(",")
 
         # Build the vNetwork array
-        $nsgVNETs[$nsgSheet[$i].M] += [pscustomobject]@{ resourceGroupName = $nsgSheet[$i].N; name = $nsgSheet[$i].O; subnets = $subnets}
+        $nsgVNETs[$nsgSheet[$i].virtualNetworks] += [pscustomobject]@{ resourceGroupName = $nsgSheet[$i].resourceGroupName; name = $nsgSheet[$i].vNetName; subnets = $subnets}
     }
 }
 
@@ -59,8 +59,6 @@ for ($i=0; $i -le $nsgSheet.Count; $i++)
 "##### azure command to create NSGs" | Out-File -Encoding utf8 "$deployPath/az-nsg-create-cmd.bat"
 foreach ($nsg in $nsgArray)
 {
-
-
     # 1. build Settings block for AZBB
     $settingsBLOCK = @()
     $settingsBLOCK += @{name = $nsg.name; securityRules = $nsgRules[$nsg.name]; virtualNetworks = $nsgVNETs[$nsg.name]}
