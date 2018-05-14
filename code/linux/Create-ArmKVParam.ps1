@@ -21,7 +21,7 @@ $kvArray = @()
 for ($i=0; $i -lt $kvSheet.Count; $i++)
 {
     if ($kvSheet[$i].Properties -eq "resourceGroupName") { # find key vault table header
-        $kvArray += @{resourceGroupName = $kvSheet[$i].B; location = $kvSheet[$i+1].B; tenantId = $tenantID; name = $kvSheet[$i+2].B; enabledForDeployment = $kvSheet[$i+3].B; enabledForTemplateDeployment = $kvSheet[$i+4].B; enableVaultForVolumeEncryption = $kvSheet[$i+5].B;
+        $kvArray += @{resourceGroupName = $kvSheet[$i].value; location = $kvSheet[$i+1].value; tenantId = $tenantID; name = $kvSheet[$i+2].value; enabledForDeployment = $kvSheet[$i+3].value; enabledForTemplateDeployment = $kvSheet[$i+4].value; enableVaultForVolumeEncryption = $kvSheet[$i+5].value;
         }
     }
 }
@@ -30,23 +30,23 @@ for ($i=0; $i -lt $kvSheet.Count; $i++)
 $kvAccessPolicyArray = @{}
 for ($i=0; $i -le $kvSheet.Count; $i++)
 {
-    if (($kvSheet[$i].C -eq "accessPolicies") ) { 
+    if (($kvSheet[$i].accessPolicies -eq "accessPolicies") ) { 
         Continue  # table header, do nothing
     }
-    if (($kvSheet[$i].C -ne $null) -and ($kvSheet[$i].D -ne "objectName") ) { # build the AccessPolicy array
+    if (($kvSheet[$i].accessPolicies -ne $null) -and ($kvSheet[$i].objectName -ne "objectName") ) { # build the AccessPolicy array
 
-        if ($kvAccessPolicyArray[$kvSheet[$i].C].count -eq 0){
-            $kvAccessPolicyArray[$kvSheet[$i].C]=@() 
+        if ($kvAccessPolicyArray[$kvSheet[$i].accessPolicies].count -eq 0){
+            $kvAccessPolicyArray[$kvSheet[$i].accessPolicies]=@() 
         } 
 
-        $permissionKeys = @($kvSheet[$i].F.Replace(" ","").Split(","))
-        $permissionSecrets = @($kvSheet[$i].G.Replace(" ","").Split(","))
-        $permissionCerts = @($kvSheet[$i].H.Replace(" ","").Split(","))
+        $permissionKeys = @($kvSheet[$i].keys.Replace(" ","").Split(","))
+        $permissionSecrets = @($kvSheet[$i].secrets.Replace(" ","").Split(","))
+        $permissionCerts = @($kvSheet[$i].certificates.Replace(" ","").Split(","))
 
         $Permissions = @{keys = $permissionKeys; secrets = $permissionSecrets; certificates = $permissionCerts}
 
-        $kvAccessPolicy = [pscustomobject]@{tenantId = $tenantID; objectId = $kvSheet[$i].E; permissions = $Permissions}
-        $kvAccessPolicyArray[$kvSheet[$i].C] += @($kvAccessPolicy)
+        $kvAccessPolicy = [pscustomobject]@{tenantId = $tenantID; objectId = $kvSheet[$i].objectId; permissions = $Permissions}
+        $kvAccessPolicyArray[$kvSheet[$i].accessPolicies] += @($kvAccessPolicy)
     }
 }
 
@@ -54,21 +54,21 @@ for ($i=0; $i -le $kvSheet.Count; $i++)
 $secretsName = @{}; $secretsValue = @{}
 for ($i=0; $i -le $kvSheet.Count; $i++)
 {
-    if ($kvSheet[$i].I -eq "KeyVaultName") { 
+    if ($kvSheet[$i].KeyVaultName -eq "KeyVaultName") { 
         Continue # table header, do nothing
     }
 
-    if (($kvSheet[$i].I -ne $null) -and ($kvSheet[$i].J -ne "secretsName") ) { # build the secrets arrays
-        if ($secretsName[$kvSheet[$i].I].count -eq 0){
-            $secretsName[$kvSheet[$i].I] = @() 
-            $secretsValue[$kvSheet[$i].I] = @() 
+    if (($kvSheet[$i].KeyVaultName -ne $null) -and ($kvSheet[$i].secretsName -ne "secretsName") ) { # build the secrets arrays
+        if ($secretsName[$kvSheet[$i].secretsName].count -eq 0){
+            $secretsName[$kvSheet[$i].secretsName] = @() 
+            $secretsValue[$kvSheet[$i].secretsName] = @() 
         } 
 
-        if ($kvSheet[$i].K -eq "YES") { # only when new value required, we will create secret, otherwise, skip that line
+        if ($kvSheet[$i].newValue -eq "YES") { # only when new value required, we will create secret, otherwise, skip that line
             # Create a secret resource item
-            $kvName = $kvSheet[$i].I
+            $kvName = $kvSheet[$i].KeyVaultName
             
-            $secretName = $kvSheet[$i].J
+            $secretName = $kvSheet[$i].secretsName
             $secretValue = New-StrongPassword
             # Build the secrets array
             $secretsName[$kvName] += @($secretName)
