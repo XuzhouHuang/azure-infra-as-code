@@ -13,7 +13,7 @@ $nsgArray = @()
 for ($i=0; $i -lt $nsgSheet.Count; $i++)
 {
     if ($nsgSheet[$i].Properties -eq "resourceGroupName") { # find nsg table header
-        $nsgArray += @{resourceGroupName = $nsgSheet[$i].B; location = $nsgSheet[$i+1].B; name = $nsgSheet[$i+2].B}
+        $nsgArray += @{resourceGroupName = $nsgSheet[$i].value; location = $nsgSheet[$i+1].value; name = $nsgSheet[$i+2].value}
     }
 }
 
