@@ -12,9 +12,9 @@ $vnetArray = @()
 for ($i=0; $i -lt $vnetSheet.Count; $i++)
 {
     if ($vnetSheet[$i].Properties -eq "resourceGroupName") { # find vnet table header
-        [array]$dnsArray = @(); if ($vnetSheet[$i+3].B){ [array]$dnsArray = $vnetSheet[$i+3].B.Replace(" ","").Split(",")}
-        [array]$ipArray = @(); if ($vnetSheet[$i+4].B){ [array]$ipArray = $vnetSheet[$i+4].B.Replace(" ","").Split(",")}
-        $vnetArray += @{resourceGroupName = $vnetSheet[$i].B; location = $vnetSheet[$i+1].B; name = $vnetSheet[$i+2].B; dnsServers=$dnsArray; addressPrefixes = $ipArray}
+        [array]$dnsArray = @(); if ($vnetSheet[$i+3].value){ [array]$dnsArray = $vnetSheet[$i+3].value.Replace(" ","").Split(",")}
+        [array]$ipArray = @(); if ($vnetSheet[$i+4].value){ [array]$ipArray = $vnetSheet[$i+4].value.Replace(" ","").Split(",")}
+        $vnetArray += @{resourceGroupName = $vnetSheet[$i].value; location = $vnetSheet[$i+1].value; name = $vnetSheet[$i+2].value; dnsServers=$dnsArray; addressPrefixes = $ipArray}
     }
 }
 
