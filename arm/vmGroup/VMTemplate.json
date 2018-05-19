@@ -80,6 +80,8 @@
   },
   "variables": {
     "apiVersion": "2016-01-01",
+    
+    "storageServiceEndPoint": "[if(contains(toLower(resourcegroup().location),'china'), '.blob.core.chinacloudapi.cn', '.blob.core.windows.net')]",
 
     "vnetID": "[resourceId(parameters('vNetRG'), 'Microsoft.Network/virtualNetworks/', parameters('vNetName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
@@ -219,7 +221,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[concat('http://', parameters('vmDiagnosticStor'), '.blob.core.chinacloudapi.cn')]"
+            "storageUri": "[concat('http://', parameters('vmDiagnosticStor'), variables('storageServiceEndPoint'))]"
           }
         }
       }
