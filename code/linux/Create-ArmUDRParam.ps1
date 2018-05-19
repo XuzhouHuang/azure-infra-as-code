@@ -7,6 +7,7 @@ $udrSheet = Import-Excel -Path $excelSheet -WorksheetName UDR -DataOnly
 
 $environmentSheet = Import-Excel -Path $excelSheet -WorksheetName Environment -DataOnly 
 $subscriptionId = $environmentSheet[1].SubscriptionID
+$cloud = $environmentSheet[1].Cloud
 
 # build UDR Array
 $udrArray = @()
@@ -82,7 +83,7 @@ foreach ($udr in $udrArray)
     $azbbParamFileName = "arm-udr-" + $udr.name + "-Param.json"
     $azbbParam | Out-File -Encoding utf8 "$deployPath/$azbbParamFileName"
 
-    $azCommand = "azbb -c AzureChinaCloud -s " + $subscriptionId + " -l " + $udr.location + " -g " + $udr.resourceGroupName  + " -p $deployPath/$azbbParamFileName --deploy"
+    $azCommand = "azbb -c " + $cloud + " -s " + $subscriptionId + " -l " + $udr.location + " -g " + $udr.resourceGroupName  + " -p $deployPath/$azbbParamFileName --deploy"
     $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-udr-create-cmd.bat"
 }
 
