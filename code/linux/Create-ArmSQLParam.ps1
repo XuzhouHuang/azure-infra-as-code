@@ -95,7 +95,8 @@ foreach ($databaseinstance in $sqlSheet) {
 
     # build az command batch to create resource
     $azCommand = "az group deployment create -g " + $resourceGroupName + " --template-file $sqlTemplate --parameters " + " @$sqlParamFileName"
-    $azCommand = "az group deployment create -g " + $keyvaultRG + " --template-file $secretTemplate --parameters " + " @$parameterSecretFile"
+    $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-sql-create-cmd.bat"
     
+    $azCommand = "az group deployment create -g " + $keyvaultRG + " --template-file $secretTemplate --parameters " + " @$parameterSecretFile"
     $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-sql-create-cmd.bat"
 }
