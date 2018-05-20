@@ -11,6 +11,10 @@ $sqlTemplate = "../../arm/SQL/sql-server-db.json"
 Copy-Item -Path $sqlTemplate -Destination "./sql-server-db.json"
 $sqlTemplate = "$deployPath/sql-server-db.json"
 
+$secretTemplate = "../../arm/SQL/sql-db-connection-secret.json"
+Copy-Item -Path $secretTemplate -Destination "./sql-db-connection-secret.json"
+$secretTemplate = "$deployPath/sql-db-connection-secret.json"
+
 "### create Azure SQL Resource command " | Out-File -Encoding utf8 "$deployPath/az-sql-create-cmd.bat"
 foreach ($databaseinstance in $sqlSheet) {
 
@@ -32,6 +36,7 @@ foreach ($databaseinstance in $sqlSheet) {
     $encryption = $databaseinstance.'Encryption'
     
     $userPassword = @{ reference = @{keyVault = @{id = "/subscriptions/$subscriptionId/resourceGroups/$keyvaultRG/providers/Microsoft.KeyVault/vaults/$keyvault"}; secretName = $Secret} }
+    
     $parameterFile = @{
         contentVersion = "1.0.0.0";
         parameters = @{
@@ -61,7 +66,27 @@ foreach ($databaseinstance in $sqlSheet) {
                         value = $Encryption
                     }
             }
-}
+        }
+
+    $parameterSecretFile = @{
+        contentVersion = "1.0.0.0";
+        parameters = @{
+                    keyVaultName = @{
+                        value = $keyvault
+                    }
+                    sqlServerName = @{
+                        value = $serverName
+                    }
+                    sqlDatabaseName = @{
+                        value = $databasename
+                    }
+                    sqlDatabaseAdmin = @{
+                        value = $username
+                    }
+                    sqlDatabaseAdminPassword = $userPassword
+            }
+        }
+    # Create SQL Connection String Secrets.
 
     #create arm template file for each SQL database instance
     $sqlParamFileName = "$deployPath/arm-sql-$serverName-$databasename-Param.json"
