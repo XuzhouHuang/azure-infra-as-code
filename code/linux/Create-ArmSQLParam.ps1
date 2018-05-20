@@ -89,14 +89,17 @@ foreach ($databaseinstance in $sqlSheet) {
 
     #create arm template file for each SQL database instance
     $sqlParamFileName = "$deployPath/arm-sql-$serverName-$databasename-Param.json"
-    
     $parameterFile = ConvertTo-Json -InputObject $parameterFile -Depth 10
     $parameterFile | Out-File -Encoding utf8 $sqlParamFileName 
+    
+    $sqlSecretParamFileName = "$deployPath/arm-sql-$serverName-$databasename-Secret-Param.json"
+    $parameterSecretFile = ConvertTo-Json -InputObject $parameterSecretFile -Depth 10
+    $parameterSecretFile | Out-File -Encoding utf8 $sqlSecretParamFileName 
 
     # build az command batch to create resource
     $azCommand = "az group deployment create -g " + $resourceGroupName + " --template-file $sqlTemplate --parameters " + " @$sqlParamFileName"
     $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-sql-create-cmd.bat"
     
-    $azCommand = "az group deployment create -g " + $keyvaultRG + " --template-file $secretTemplate --parameters " + " @$parameterSecretFile"
+    $azCommand = "az group deployment create -g " + $keyvaultRG + " --template-file $secretTemplate --parameters " + " @$sqlSecretParamFileName"
     $azCommand | Out-File -Encoding utf8 -Append "$deployPath/az-sql-create-cmd.bat"
 }
