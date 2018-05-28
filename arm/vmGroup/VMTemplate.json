@@ -87,7 +87,7 @@
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
 
     "vmName": "[parameters('vmName')]",
-    "osType": "Linux",
+    "osType": "[if(contains(toLower(parameters('imageUri')),'win'), 'Windows', 'Linux')]",
     "imageName": "[concat(parameters('vmName'),'-image')]",
 
     "vmDataDiskSizeInGB": 32,
