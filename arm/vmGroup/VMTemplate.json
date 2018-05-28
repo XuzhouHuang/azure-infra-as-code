@@ -15,6 +15,13 @@
         "description": "Number of VM instances to create, default is 2"
       }
     },
+    "dataDiskNumber": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of data disk attached to each VM"
+      }
+    },
     "availabilitySetName": {
       "type": "string",
       "metadata": {
@@ -142,7 +149,7 @@
     {
       "apiVersion": "2017-03-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex(),2,'0'))]",
+      "name": "[concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex('nicLoop'),2,'0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
@@ -154,7 +161,7 @@
             "name": "[variables('ipConfigName')]",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[concat(substring(parameters('vmIPScope'), 0, lastIndexOf(parameters('vmIPScope'), '.')), '.', add(int(last(split(parameters('vmIPScope'),'.'))), copyIndex()) )]",
+              "privateIPAddress": "[concat(substring(parameters('vmIPScope'), 0, lastIndexOf(parameters('vmIPScope'), '.')), '.', add(int(last(split(parameters('vmIPScope'),'.'))), copyIndex('nicloop')) )]",
               "subnet": {
                 "id": "[variables('subnetRef')]"
               }
@@ -168,7 +175,7 @@
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'))]",
+      "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'))]",
       "location": "[resourceGroup().location]",
       "tags": {},
       "copy": {
@@ -176,7 +183,7 @@
         "count": "[parameters('numberOfInstances')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex(),2,'0')))]",
+        "[concat('Microsoft.Network/networkInterfaces/', concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex('vmloop'),2,'0')))]",
         "[concat('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]",
         "[concat('Microsoft.Compute/images/', variables('imageName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('vmDiagnosticStor'))]"
@@ -189,22 +196,26 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'))]",
+          "computerName": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
           "osDisk": {
-            "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'),'-OS-Disk')]",
+            "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'),'-OS-Disk')]",
             "createOption": "FromImage"
           },
-          "dataDisks": [
+          "copy": [
             {
-              "name": "[concat(variables('vmName'),padLeft(copyIndex(),2,'0'),'-Data-Disk')]",
-              "lun": 0,
-              "diskSizeGB": "[variables('vmDataDiskSizeInGB')]",
-              "caching": "ReadOnly",
-              "createOption": "Empty"
+              "name": "dataDisks",
+              "count": "[parameters('dataDiskNumber')]",
+              "input": {
+                "caching": "ReadOnly",
+                "diskSizeGB": "[variables('vmDataDiskSizeInGB')]",
+                "lun": "[copyIndex('dataDisks')]",
+                "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'),'-Data-Disk',copyIndex('dataDisks'))]",
+                "createOption": "Empty"
+              }
             }
           ],
           "imageReference": {
@@ -214,7 +225,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(copyIndex(),2,'0')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(copyIndex('vmloop'),2,'0')))]"
             }
           ]
         },

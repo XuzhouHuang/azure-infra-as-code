@@ -50,6 +50,9 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
                 vmSize = @{
                     value = $VMObjectHash.vmSize
                 }
+                dataDiskNumber = @{
+                    value = [int]$VMObjectHash.dataDiskNumber
+                }
                 numberOfInstances = @{
                     value = [int]$VMObjectHash.numberOfInstances
                 }
