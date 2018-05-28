@@ -22,6 +22,13 @@
         "description": "Number of data disk attached to each VM"
       }
     },
+    "indexFrom": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "index offsite added after VM Name, it only affect VM name, does not affect NIC IP address starting address"
+      }
+    },
     "availabilitySetName": {
       "type": "string",
       "metadata": {
@@ -149,7 +156,7 @@
     {
       "apiVersion": "2017-03-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex('nicLoop'),2,'0'))]",
+      "name": "[concat(variables('nicName'),parameters('vmName'),padLeft(add(copyIndex('nicLoop'), parameters('indexFrom')),2,'0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
@@ -175,7 +182,7 @@
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'))]",
+      "name": "[concat(variables('vmName'),padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0'))]",
       "location": "[resourceGroup().location]",
       "tags": {},
       "copy": {
@@ -183,7 +190,7 @@
         "count": "[parameters('numberOfInstances')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', concat(variables('nicName'),parameters('vmName'),padLeft(copyIndex('vmloop'),2,'0')))]",
+        "[concat('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0')))]",
         "[concat('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]",
         "[concat('Microsoft.Compute/images/', variables('imageName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('vmDiagnosticStor'))]"
@@ -196,13 +203,13 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'))]",
+          "computerName": "[concat(variables('vmName'),padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
           "osDisk": {
-            "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'),'-OS-Disk')]",
+            "name": "[concat(variables('vmName'),padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0'),'-OS-Disk')]",
             "createOption": "FromImage"
           },
           "copy": [
@@ -213,7 +220,7 @@
                 "caching": "ReadOnly",
                 "diskSizeGB": "[variables('vmDataDiskSizeInGB')]",
                 "lun": "[copyIndex('dataDisks')]",
-                "name": "[concat(variables('vmName'),padLeft(copyIndex('vmloop'),2,'0'),'-Data-Disk',copyIndex('dataDisks'))]",
+                "name": "[concat(variables('vmName'),padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0'),'-Data-Disk',copyIndex('dataDisks'))]",
                 "createOption": "Empty"
               }
             }
@@ -225,7 +232,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(copyIndex('vmloop'),2,'0')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), parameters('vmName'), padLeft(add(copyIndex('vmLoop') , parameters('indexFrom')),2,'0')))]"
             }
           ]
         },

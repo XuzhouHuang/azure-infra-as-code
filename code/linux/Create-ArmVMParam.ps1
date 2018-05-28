@@ -56,6 +56,9 @@ for ($i = 0; $i -lt $vmSheet.Count; $i++)
                 numberOfInstances = @{
                     value = [int]$VMObjectHash.numberOfInstances
                 }
+                indexFrom = @{
+                    value = [int]$VMObjectHash.indexFrom
+                }
                 imageUri = @{
                     value = $VMObjectHash.imageUri
                 }
